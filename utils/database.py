@@ -11,8 +11,21 @@ def get_db_connection():
         port=os.environ['PGPORT']
     )
 
+def drop_users_table():
+    conn = get_db_connection()
+    with conn.cursor() as cur:
+        # Drop the transactions table first due to foreign key constraint
+        cur.execute("DROP TABLE IF EXISTS transactions")
+        # Then drop the users table
+        cur.execute("DROP TABLE IF EXISTS users")
+        conn.commit()
+    conn.close()
+
 def init_db():
     conn = get_db_connection()
+    # Drop existing tables first
+    drop_users_table()
+    
     from models.user import User
     from models.transaction import Transaction
     
