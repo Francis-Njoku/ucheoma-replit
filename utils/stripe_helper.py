@@ -1,7 +1,8 @@
 import stripe
 import streamlit as st
+import os
 
-stripe.api_key = st.secrets["STRIPE_SECRET_KEY"]
+stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 
 PRICE_IDS = {
     'basic': 'price_basic',  # Replace with actual Stripe price IDs
