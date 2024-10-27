@@ -5,11 +5,14 @@ import os
 stripe.api_key = os.environ.get('STRIPE_SECRET_KEY')
 
 PRICE_IDS = {
-    'basic': 'price_basic',  # Replace with actual Stripe price IDs
-    'premium': 'price_premium'
+    'basic': 'price_basic',      # Replace with actual Stripe price ID for $10/month plan
+    'premium': 'price_premium'   # Replace with actual Stripe price ID for $25/month plan
 }
 
 def create_checkout_session(user_id: int, subscription_type: str):
+    if subscription_type == 'free':
+        return None
+        
     try:
         checkout_session = stripe.checkout.Session.create(
             payment_method_types=['card'],

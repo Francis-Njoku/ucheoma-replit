@@ -36,20 +36,28 @@ def main():
                 password = st.text_input("Password", type="password")
                 subscription = st.selectbox(
                     "Subscription Type",
-                    options=['basic', 'premium'],
-                    format_func=lambda x: f"{x.title()} (${25 if x == 'premium' else 10}/month)"
+                    options=['free', 'basic', 'premium'],
+                    format_func=lambda x: {
+                        'free': 'Free',
+                        'basic': 'Basic ($10/month)',
+                        'premium': 'Premium ($25/month)'
+                    }[x]
                 )
                 submit = st.form_submit_button("Register")
                 
                 if submit:
                     user_id = register_user(email, password, subscription)
                     if user_id:
-                        checkout_url = create_checkout_session(user_id, subscription)
-                        if checkout_url:
-                            st.success("Registration successful! Redirecting to payment...")
-                            st.markdown(f'<meta http-equiv="refresh" content="2;url={checkout_url}">', unsafe_allow_html=True)
+                        if subscription in ['basic', 'premium']:
+                            checkout_url = create_checkout_session(user_id, subscription)
+                            if checkout_url:
+                                st.success("Registration successful! Redirecting to payment...")
+                                st.markdown(f'<meta http-equiv="refresh" content="2;url={checkout_url}">', unsafe_allow_html=True)
+                            else:
+                                st.error("Error creating payment session")
                         else:
-                            st.error("Error creating payment session")
+                            st.success("Registration successful!")
+                            st.rerun()
     else:
         st.sidebar.success("Logged in successfully!")
         if st.sidebar.button("Logout"):
