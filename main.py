@@ -1,6 +1,6 @@
 import streamlit as st
 from utils.database import init_db
-from utils.auth import login_user, register_user
+from utils.auth import login_user, register_user, verify_email_token
 from utils.stripe_helper import create_checkout_session
 
 st.set_page_config(
@@ -11,6 +11,17 @@ st.set_page_config(
 
 def main():
     init_db()
+    
+    # Handle email verification
+    params = st.experimental_get_query_params()
+    if 'token' in params:
+        token = params['token'][0]
+        if verify_email_token(token):
+            st.success("Email verified successfully! You can now log in.")
+            # Clear the token from URL
+            st.experimental_set_query_params()
+        else:
+            st.error("Invalid or expired verification token.")
     
     if 'user_id' not in st.session_state:
         st.title("Welcome to AI Financial Assistant")
@@ -28,7 +39,7 @@ def main():
                         st.success("Login successful!")
                         st.rerun()
                     else:
-                        st.error("Invalid credentials")
+                        st.error("Invalid credentials or unverified email")
         
         with tab2:
             with st.form("register_form"):
@@ -56,8 +67,7 @@ def main():
                             else:
                                 st.error("Error creating payment session")
                         else:
-                            st.success("Registration successful!")
-                            st.rerun()
+                            st.success("Registration successful! Please check your email to verify your account.")
     else:
         st.sidebar.success("Logged in successfully!")
         if st.sidebar.button("Logout"):

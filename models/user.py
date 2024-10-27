@@ -11,6 +11,8 @@ class User:
     subscription_status: str
     created_at: datetime
     stripe_customer_id: Optional[str] = None
+    email_verified: bool = False
+    verification_token: Optional[str] = None
 
     @staticmethod
     def create_table(conn):
@@ -23,7 +25,9 @@ class User:
                     subscription_type VARCHAR(50) NOT NULL,
                     subscription_status VARCHAR(50) NOT NULL,
                     created_at TIMESTAMP NOT NULL,
-                    stripe_customer_id VARCHAR(255)
+                    stripe_customer_id VARCHAR(255),
+                    email_verified BOOLEAN DEFAULT FALSE,
+                    verification_token VARCHAR(255)
                 )
             """)
             conn.commit()

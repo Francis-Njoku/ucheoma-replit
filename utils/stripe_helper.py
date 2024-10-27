@@ -21,8 +21,8 @@ def create_checkout_session(user_id: int, subscription_type: str):
                 'quantity': 1,
             }],
             mode='subscription',
-            success_url='http://localhost:5000/success',
-            cancel_url='http://localhost:5000/cancel',
+            success_url='http://0.0.0.0:5000/success',
+            cancel_url='http://0.0.0.0:5000/cancel',
             client_reference_id=str(user_id)
         )
         return checkout_session.url

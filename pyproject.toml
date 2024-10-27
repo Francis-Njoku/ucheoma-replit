@@ -10,6 +10,7 @@ dependencies = [
     "plotly>=5.24.1",
     "psycopg2-binary>=2.9.10",
     "python-dotenv>=1.0.1",
+    "requests>=2.32.3",
     "streamlit>=1.39.0",
     "stripe>=11.1.1",
 ]
